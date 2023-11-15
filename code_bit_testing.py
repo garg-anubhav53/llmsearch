@@ -3,6 +3,8 @@ import urllib
 import openai
 import os
 
+search_terms = ''
+number_of_results = 0
 
 def main():
 	gkey = os.environ.get('GOOGLE_CX')
@@ -14,13 +16,13 @@ def main():
 	#demonstrate how to use the 'params' parameter:
 	user_inputs = input(
 		"Enter some search terms and as output you will get a summary of the first link. /n" +
-		"Provide your response in this format: [search terms],[number_of_results_to_try]").split(',')
+		"Provide your response in this format: [search terms],[number_of_results_to_try] /n").split(',')
 	
 	search_terms = user_inputs[0]
 	number_of_results = user_inputs[1]
-    print ("Searach terms and number of results ", search_terms + " " + number_of_results)
 
 if __name__ == "__main__":
-    main()
+    print(main())
+    
 
 
