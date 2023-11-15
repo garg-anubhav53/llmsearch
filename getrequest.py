@@ -87,14 +87,26 @@ def run_GPT_request(html, searchterms, LLM_responses):
 
 	request_instructions = f"""Please take the following HTML output and summarize the webpage text 
 	that has to do with the content for the user's search terms. Do not give an overview of what the page provides, instead 
-	interpret the webpage text directly and provide a summary about it's details: {searchterms}. Here is the HTML to
+	interpret the webpage text directly and provide summarization 
+	that a user interested in the search terms could use to learn about the topic directly. The search terms are: {searchterms}. Here is the HTML to
 	summarize for those search terms: {html}. 
 	If you can not provide a summary of the actual webpage, respond only with a single world - 'unable'.
 	 """
 
 	request_messages = [
-    {"role": "system", "content": "You are a helpful assistant that is an expert at parsing complicated HTML and extracting the essential/meaningful portions for a given topic."},
-    {"role": "user", "content": request_instructions}
+    {"role": "system", "content": """
+	You are a helpful assistant that is an expert at parsing complicated HTML 
+	and extracting the essential/meaningful portions for a given topic. 
+	Please take the following HTML output and summarize the webpage text 
+	that has to do with the content for the user's search terms. 
+	Do not give an overview of what the page provides, instead 
+	interpret the webpage text directly and provide summarization 
+	that a user interested in the search terms could use to learn about the topic directly. 
+	Do not tell me about the webpage, instead tell me about the knowledge stored within the webpage by reading and summarizing it.
+	Do not include anything about the structure, titles, and fields of the webpage in your response."
+    """
+	},
+	{"role": "user", "content": request_instructions}
     ]
 	summary_response = client.chat.completions.create(model="gpt-3.5-turbo-1106", messages=request_messages)
 	LLMSummary_Result = summary_response.choices[0].message.content
