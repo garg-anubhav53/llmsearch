@@ -20,6 +20,8 @@ def main():
 	"q": user_prompt 
 	}
 
+	number_of_results = 3; 
+
 	response = requests.get(url, params = set_params)
 
 	#print the response (the content of the requested file):
@@ -30,10 +32,16 @@ def main():
 	rawHTML = f.read()
 
 
+
 	main_html = get_main_HTML(rawHTML)
-	print("This is the length of main html " , len(main_html))
 	
-	run_GPT_request(main_html, user_prompt)
+	if main_html == "Main index or end of main index was not found, try another search method " : 
+		print (main_html)
+		print ("Please make changes to the code to find other html formats that may be in search results for your keyterm")
+	
+	else: 
+		print ("main_html for the search terms was found, we will now summarize some results for you.")
+		run_GPT_request(main_html, user_prompt)
 
 def get_main_HTML(inputHTML): 
 	f2 = open("afile.html", "w")
@@ -47,16 +55,20 @@ def get_main_HTML(inputHTML):
 
 	if main_index == -1 or endmain_index == -1: 
 		simple_error = "Main index or end of main index was not found, try another search method "
-		print ("simple_error")
+		print (simple_error)
 		return simple_error
 
 	main_html = decoded_html[main_index:endmain_index]
-	print("This is in main_html at line 49 in get_main_HTML " + main_html)
 	return main_html
 	 
 
 def run_GPT_request(html, searchterms):
 	client = openai.OpenAI()
+
+	# temporary fix: Check to see if the html is too long, if it is, save only the first 10000 characters.
+
+	if len(html) > 10000: 
+		html = html[0:10000]
 
 	request_instructions = f"""Please take the following HTML output and summarize the webpage text 
 	that has to do with the content for the user's search terms: {searchterms}. Here is the HTML to
