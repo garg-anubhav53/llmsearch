@@ -195,7 +195,7 @@ def run_chat(query_string, search_level=gs.QUICK_SEARCH):
             int((time.process_time() - start_process_time) * 1000),
             "cpu ms",
         )
-
+        print ("In search service, this is what is in the var google_text: " + google_text)
         return google_text
     except KeyboardInterrupt:
         traceback.print_exc()
